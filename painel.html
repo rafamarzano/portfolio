@@ -1,138 +1,217 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel · meu.painel</title>
 <meta name="robots" content="noindex, nofollow">
+<title>Painel | meu.painel</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/auth.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --cereja: #670626;
-    --cereja-escuro: #4C041D;
-    --creme: #FCFAF0;
-    --branco: #FFFFFF;
-    --chocolate: #3D2722;
-    --chocolate-suave: #7A6B63;
-    --azul-titulo: #022E4C;
-    --borda: #E4E2DD;
-    --verde-sucesso: #5E7F47;
-    --vermelho-erro: #8E1825;
-    --raio: 20px;
-    --raio-pequeno: 12px;
-    --sombra: 0 12px 32px -16px rgba(61,39,34,0.18);
-    --serif: "Fraunces", serif;
-    --sans: "Outfit", sans-serif;
-    --sidebar-largura: 240px;
-  }
-  *, *::before, *::after{ box-sizing: border-box; }
-  html, body{ margin: 0; padding: 0; }
-  body{
-    background: var(--creme);
-    color: var(--chocolate);
-    font-family: var(--sans);
+    --pink: #FF1493;
+    --pink-dark: #E91E8C;
+    --pink-pastel: #FFB6D9;
+    --pink-tint: #FFF0F7;
+    --white: #FFFFFF;
+    --black: #000000;
+    --text-soft: #6B6B6B;
+    --border: #000000;
+    --yellow: #FFEB3B;
+    --blue-pastel: #ADD8E6;
+    --red-punch: #FF4444;
+    --success: #2D7A4F;
+    --error: #C4453C;
+    --radius-sm: 12px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --border-width: 3px;
+    --shadow-hard: 6px 6px 0 var(--black);
+    --shadow-hard-sm: 3px 3px 0 var(--black);
+    --font-title: 'Fredoka', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+    --sidebar-width: 260px;
   }
 
-  /* ---------- Estrutura geral ---------- */
-  .app-shell{
+  * { box-sizing: border-box; }
+
+  /* A tela fica invisível até o guarda de autenticação confirmar a sessão */
+  body.auth-pending{ visibility: hidden; }
+
+  body{
+    margin: 0;
+    background-color: var(--pink-pastel);
+    background-image: radial-gradient(rgba(255,255,255,.5) 2px, transparent 2px);
+    background-size: 22px 22px;
+    font-family: var(--font-body);
+    color: var(--black);
+  }
+
+  a { color: inherit; }
+
+  .app{
     display: flex;
     min-height: 100vh;
   }
 
-  /* ---------- Barra lateral ---------- */
-  .sidebar{
-    width: var(--sidebar-largura);
-    flex-shrink: 0;
-    background: var(--branco);
-    border-right: 1px solid var(--borda);
-    display: flex;
-    flex-direction: column;
-    padding: 28px 20px;
+  /* Stickers flutuantes, so decoracao, nao atrapalham cliques */
+  .floaty{
     position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    z-index: 20;
-    transition: transform 0.25s ease;
+    pointer-events: none;
+    user-select: none;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(1px 1px 0 rgba(0,0,0,.15));
+    z-index: 1;
   }
-  .logo-painel{
-    font-family: var(--serif);
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 36px;
-    padding: 0 8px;
-    color: var(--azul-titulo);
+
+  @keyframes float{
+    0%, 100%{ transform: translateY(0) rotate(-8deg); }
+    50%{ transform: translateY(-10px) rotate(8deg); }
   }
-  .logo-painel .ponto{ color: var(--cereja); }
-  .sidebar-nav{
+
+  /* ---------------- Sidebar ---------------- */
+  .sidebar{
+    width: var(--sidebar-width);
+    background: var(--white);
+    border-right: var(--border-width) solid var(--black);
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    flex: 1;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 60;
+    transition: transform .25s ease;
   }
+
+  .sidebar-top{
+    padding: 28px 24px 20px;
+    position: relative;
+  }
+
+  .logo{
+    font-family: var(--font-title);
+    font-size: 21px;
+    font-weight: 700;
+  }
+
+  .logo .dot{ color: var(--pink); }
+
+  .sidebar-star{
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-size: 20px;
+    color: var(--yellow);
+    animation: float 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .sidebar-nav{
+    flex: 1;
+    padding: 8px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
   .nav-item{
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 11px 14px;
-    border-radius: var(--raio-pequeno);
-    border: none;
-    background: none;
-    color: var(--chocolate-suave);
-    font-family: var(--sans);
-    font-size: 0.92rem;
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid transparent;
+    background: transparent;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 15px;
     font-weight: 500;
+    color: var(--text-soft);
     cursor: pointer;
     text-align: left;
-    width: 100%;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
   }
-  .nav-item svg{ flex-shrink: 0; width: 19px; height: 19px; }
-  .nav-item:hover{ background: var(--creme); }
-  .nav-item.ativo{
-    background: var(--cereja);
-    color: var(--branco);
+
+  .nav-item svg{ width: 20px; height: 20px; flex-shrink: 0; }
+
+  .nav-item:hover{ background: var(--pink-tint); color: var(--black); }
+
+  .nav-item.active{
+    background: var(--pink);
+    color: var(--white);
+    border-color: var(--black);
+    box-shadow: var(--shadow-hard-sm);
   }
-  .sidebar-rodape{
-    border-top: 1px solid var(--borda);
-    padding-top: 16px;
-    margin-top: 16px;
+
+  .sidebar-footer{
+    padding: 18px 24px 24px;
+    border-top: var(--border-width) solid var(--black);
   }
-  .sidebar-email{
-    font-size: 0.78rem;
-    color: var(--chocolate-suave);
-    padding: 0 8px;
+
+  .user-email{
+    font-size: 13px;
+    color: var(--text-soft);
     margin-bottom: 10px;
     word-break: break-all;
   }
-  .botao-sair{
-    width: 100%;
-    padding: 10px 14px;
-    border-radius: var(--raio-pequeno);
-    border: 1.5px solid var(--borda);
-    background: none;
-    color: var(--chocolate);
-    font-family: var(--sans);
-    font-weight: 500;
-    font-size: 0.86rem;
-    cursor: pointer;
-  }
-  .botao-sair:hover{ border-color: var(--vermelho-erro); color: var(--vermelho-erro); }
 
-  /* ---------- Área principal ---------- */
-  .area-principal{
-    margin-left: var(--sidebar-largura);
-    flex: 1;
-    min-width: 0;
-    padding: 32px 40px 60px;
+  .btn-logout{
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid var(--black);
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--black);
+    cursor: pointer;
+    transition: border-color .15s ease, color .15s ease, background .15s ease;
   }
-  .topo-conteudo{
+
+  .btn-logout:hover{ border-color: var(--red-punch); color: var(--red-punch); background: var(--pink-tint); }
+
+  .overlay{
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.4);
+    z-index: 55;
+  }
+
+  .overlay.visible{ display: block; }
+
+  .menu-toggle{
+    display: none;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 70;
+    width: 42px;
+    height: 42px;
+    border: 2px solid var(--black);
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-hard-sm);
+  }
+
+  .menu-toggle svg{ width: 20px; height: 20px; }
+
+  /* ---------------- Conteúdo ---------------- */
+  .content{
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    padding: 36px 44px 60px;
+    max-width: 1200px;
+    position: relative;
+  }
+
+  .content-header{
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -140,799 +219,892 @@
     gap: 16px;
     margin-bottom: 28px;
   }
-  .topo-titulo{
-    font-family: var(--serif);
-    font-size: 1.6rem;
-    font-weight: 600;
+
+  .content-header h1{
+    font-family: var(--font-title);
+    font-size: 30px;
+    font-weight: 700;
     margin: 0;
-    color: var(--azul-titulo);
   }
-  .botao-menu-mobile{
-    display: none;
-    width: 40px;
-    height: 40px;
-    border-radius: var(--raio-pequeno);
-    border: 1px solid var(--borda);
-    background: var(--branco);
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    margin-right: 12px;
-  }
-  .cabecalho-flex{ display: flex; align-items: center; }
 
-  .filtro-periodo{
+  .period-filters{
     display: flex;
-    gap: 6px;
-    background: var(--branco);
-    padding: 5px;
-    border-radius: 100px;
-    border: 1px solid var(--borda);
+    gap: 8px;
+    background: var(--white);
+    border: 2px solid var(--black);
+    border-radius: var(--radius-sm);
+    padding: 4px;
+    box-shadow: var(--shadow-hard-sm);
   }
-  .filtro-botao{
+
+  .period-btn{
     padding: 8px 16px;
-    border-radius: 100px;
     border: none;
-    background: none;
-    color: var(--chocolate-suave);
-    font-family: var(--sans);
-    font-size: 0.84rem;
-    font-weight: 500;
+    background: transparent;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-soft);
     cursor: pointer;
-  }
-  .filtro-botao.ativo{
-    background: var(--cereja);
-    color: var(--branco);
+    transition: background .15s ease, color .15s ease;
   }
 
-  .faixa-erro-geral{
-    background: rgba(142,24,37,0.08);
-    border: 1px solid var(--vermelho-erro);
-    color: var(--vermelho-erro);
-    border-radius: var(--raio-pequeno);
+  .period-btn:hover{ color: var(--black); }
+
+  .period-btn.active{
+    background: var(--pink);
+    color: var(--white);
+  }
+
+  .banner{
+    border-radius: var(--radius-sm);
     padding: 14px 18px;
-    font-size: 0.88rem;
+    font-size: 14px;
     margin-bottom: 24px;
-    display: none;
-  }
-  .loading-geral{
-    text-align: center;
-    padding: 80px 20px;
-    color: var(--chocolate-suave);
-    font-size: 0.95rem;
+    border: 2px solid var(--black);
+    font-weight: 500;
   }
 
-  .aba-painel{ display: none; }
-  .aba-painel.ativa{ display: block; }
+  .banner.error{
+    background: #FFE3E3;
+    color: var(--error);
+  }
 
-  .saudacao{
-    font-family: var(--serif);
-    font-size: 1.1rem;
-    color: var(--chocolate-suave);
+  [hidden]{ display: none !important; }
+
+  .greeting{
+    font-size: 16px;
+    color: var(--text-soft);
+    font-weight: 500;
     margin: 0 0 24px;
   }
 
-  /* ---------- Cards de número ---------- */
-  .grade-cards-numero{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 16px;
-    margin-bottom: 24px;
+  .card{
+    background: var(--white);
+    border: var(--border-width) solid var(--black);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-hard);
+    padding: 24px;
   }
-  .card-numero{
-    background: var(--branco);
-    border-radius: var(--raio);
-    box-shadow: var(--sombra);
-    padding: 22px 20px;
-  }
-  .card-numero.destaque{
-    background: var(--cereja);
-    color: var(--branco);
-  }
-  .card-numero-valor{
-    font-family: var(--serif);
-    font-size: 2rem;
-    font-weight: 600;
-    line-height: 1.1;
-    margin-bottom: 6px;
-  }
-  .card-numero-rotulo{
-    font-size: 0.82rem;
-    color: var(--chocolate-suave);
-  }
-  .card-numero.destaque .card-numero-rotulo{ color: rgba(255,255,255,0.8); }
 
-  .cartao{
-    background: var(--branco);
-    border-radius: var(--raio);
-    box-shadow: var(--sombra);
-    padding: 26px 24px;
+  .card h2{
+    font-family: var(--font-title);
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0 0 18px;
+  }
+
+  .empty-state{
+    color: var(--text-soft);
+    font-size: 14px;
+    margin: 8px 0;
+  }
+
+  /* ---------------- Cartões de número ---------------- */
+  .stat-grid{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
     margin-bottom: 20px;
   }
-  .cartao-titulo{
-    font-family: var(--serif);
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 0 0 18px;
-    color: var(--azul-titulo);
+
+  .stat-card{
+    background: var(--white);
+    border: var(--border-width) solid var(--black);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-hard-sm);
+    padding: 20px;
   }
 
-  .cartao-destaque-contato{
-    background: var(--branco);
-    border: 1.5px solid var(--cereja);
-    border-radius: var(--raio);
-    padding: 24px;
-    margin-bottom: 24px;
+  .stat-card--highlight{
+    background: var(--pink);
+    border-color: var(--black);
   }
-  .cartao-destaque-contato .valor{
-    font-family: var(--serif);
-    font-size: 2.2rem;
+
+  .stat-number{
+    font-family: var(--font-title);
+    font-size: 30px;
     font-weight: 700;
-    color: var(--cereja);
-    margin-bottom: 4px;
-  }
-  .cartao-destaque-contato .titulo{
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-  .cartao-destaque-contato .explicacao{
-    font-size: 0.82rem;
-    color: var(--chocolate-suave);
-    line-height: 1.5;
+    line-height: 1.1;
+    color: var(--black);
   }
 
-  /* ---------- Gráfico de barras (14 dias) ---------- */
-  .grafico-barras{
+  .stat-card--highlight .stat-number{ color: var(--white); }
+
+  .stat-label{
+    font-size: 13px;
+    color: var(--text-soft);
+    margin-top: 6px;
+  }
+
+  .stat-card--highlight .stat-label{ color: rgba(255,255,255,.9); }
+
+  /* ---------------- Cartão de destaque de contato ---------------- */
+  .contact-highlight{
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    background: var(--pink-tint);
+    border: var(--border-width) solid var(--black);
+    margin-bottom: 20px;
+  }
+
+  .contact-highlight .stat-number{ color: var(--pink); font-size: 36px; }
+
+  .contact-highlight-text h3{
+    margin: 0 0 4px;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .contact-highlight-text p{
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-soft);
+    max-width: 480px;
+  }
+
+  /* ---------------- Gráfico de barras ---------------- */
+  .chart-card{ margin-bottom: 20px; position: relative; }
+
+  .bars-row{
     display: flex;
     align-items: flex-end;
     gap: 6px;
     height: 160px;
-    padding-top: 10px;
+    padding-top: 34px;
   }
-  .barra-dia-wrap{
+
+  .bar-wrap{
     flex: 1;
     height: 100%;
     display: flex;
     align-items: flex-end;
     position: relative;
-  }
-  .barra-dia{
-    width: 100%;
-    background: var(--cereja);
-    border-radius: 6px 6px 0 0;
-    min-height: 3px;
-    cursor: default;
-    transition: background 0.15s;
-  }
-  .barra-dia:hover{ background: var(--cereja-escuro); }
-  .barra-dia-wrap .dica{
-    display: none;
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--chocolate);
-    color: var(--branco);
-    font-size: 0.72rem;
-    padding: 4px 8px;
-    border-radius: 6px;
-    white-space: nowrap;
-    margin-bottom: 6px;
-    z-index: 5;
-  }
-  .barra-dia-wrap:hover .dica{ display: block; }
-  .grafico-legenda{
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.68rem;
-    color: var(--chocolate-suave);
-    margin-top: 8px;
+    cursor: pointer;
   }
 
-  /* ---------- Listas item / barra proporcional ---------- */
-  .item-lista{
+  .bar{
+    width: 100%;
+    min-height: 4px;
+    background: var(--pink);
+    border: 2px solid var(--black);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    transition: background .15s ease;
+  }
+
+  .bar-wrap:hover .bar{ background: var(--pink-dark); }
+
+  .chart-tooltip{
+    position: absolute;
+    background: var(--black);
+    color: var(--white);
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    white-space: nowrap;
+    pointer-events: none;
+    transform: translate(-50%, -100%);
+    z-index: 10;
+  }
+
+  /* ---------------- Blocos do Portfólio ---------------- */
+  .portfolio-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .portfolio-grid .card.wide{ grid-column: 1 / -1; }
+
+  .video-row, .button-row, .contact-row{
     display: flex;
     align-items: center;
     gap: 14px;
     padding: 10px 0;
-    border-bottom: 1px solid var(--borda);
+    border-bottom: 2px dashed var(--black);
   }
-  .item-lista:last-child{ border-bottom: none; }
-  .item-lista img{
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
+
+  .video-row:last-child, .button-row:last-child, .contact-row:last-child{ border-bottom: none; }
+
+  .video-thumb{
+    width: 90px;
+    height: 51px;
     object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid var(--black);
     flex-shrink: 0;
+    display: block;
   }
-  .item-lista-info{ flex: 1; min-width: 0; }
-  .item-lista-titulo{
-    font-size: 0.88rem;
-    font-weight: 500;
+
+  .video-info{ flex: 1; min-width: 0; }
+
+  .video-title{
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
     margin-bottom: 6px;
+    text-decoration: none;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .item-lista-titulo a{ color: var(--chocolate); text-decoration: none; }
-  .item-lista-titulo a:hover{ color: var(--cereja); }
-  .barra-proporcional-fundo{
-    background: var(--creme);
-    border-radius: 100px;
-    height: 8px;
-    overflow: hidden;
-  }
-  .barra-proporcional-preenchimento{
-    background: var(--cereja);
-    height: 100%;
-    border-radius: 100px;
-  }
-  .item-lista-contagem{
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--chocolate-suave);
+
+  .video-title:hover{ color: var(--pink-dark); }
+
+  .video-count{
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-soft);
     flex-shrink: 0;
-    min-width: 30px;
+    min-width: 32px;
     text-align: right;
   }
 
-  .linha-contato{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--borda);
-    font-size: 0.9rem;
-  }
-  .linha-contato:last-child{ border-bottom: none; }
-  .linha-contato-valor{
-    font-weight: 700;
-    color: var(--cereja);
+  .bar-track{
+    background: var(--pink-tint);
+    border-radius: 6px;
+    height: 8px;
+    overflow: hidden;
   }
 
-  /* ---------- Mensagens ---------- */
-  .card-mensagem{
-    border: 1px solid var(--borda);
-    border-radius: var(--raio-pequeno);
-    padding: 16px 18px;
-    margin-bottom: 12px;
+  .bar-fill{
+    height: 100%;
+    background: var(--pink);
+    border-radius: 6px;
+  }
+
+  .button-row .button-name{
+    width: 40%;
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .button-row .bar-track{ flex: 1; }
+
+  .button-row .video-count{ min-width: 28px; }
+
+  .contact-row .button-name{ width: 60%; }
+
+  /* ---------------- Mensagens / leads ---------------- */
+  .lead-card{
+    border: var(--border-width) solid var(--black);
+    border-radius: var(--radius-md);
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-hard-sm);
+    overflow: hidden;
+  }
+
+  .lead-card summary{
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 14px 16px;
     cursor: pointer;
+    background: var(--white);
+    transition: background .15s ease;
   }
-  .card-mensagem-topo{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .selo-origem{
-    font-size: 0.68rem;
-    font-weight: 600;
+
+  .lead-card summary:hover{ background: var(--pink-tint); }
+
+  .lead-card summary::-webkit-details-marker{ display: none; }
+
+  .lead-badge{
+    font-size: 11px;
+    font-weight: 700;
     text-transform: uppercase;
-    padding: 3px 9px;
-    border-radius: 100px;
-    background: var(--creme);
-    color: var(--chocolate-suave);
-    letter-spacing: 0.03em;
+    letter-spacing: .03em;
+    padding: 4px 9px;
+    border-radius: 999px;
+    border: 1.5px solid var(--black);
+    background: var(--pink-tint);
+    color: var(--text-soft);
   }
-  .card-mensagem-nome{ font-weight: 600; }
-  .card-mensagem-data{
-    font-size: 0.78rem;
-    color: var(--chocolate-suave);
-    margin-left: auto;
+
+  .lead-badge--contact{ background: var(--pink-pastel); color: var(--black); }
+  .lead-badge--popup{ background: var(--blue-pastel); color: var(--black); }
+
+  .lead-name{ font-weight: 700; font-size: 14px; }
+  .lead-date{ font-size: 13px; color: var(--text-soft); }
+  .lead-email{ font-size: 13px; color: var(--text-soft); margin-left: auto; }
+
+  .lead-body{
+    padding: 4px 16px 18px;
+    border-top: 2px dashed var(--black);
+    background: var(--pink-tint);
   }
-  .card-mensagem-email{
-    font-size: 0.85rem;
-    color: var(--chocolate-suave);
-    margin-top: 4px;
-  }
-  .card-mensagem-detalhes{
-    display: none;
-    margin-top: 14px;
-    padding-top: 14px;
-    border-top: 1px solid var(--borda);
-    font-size: 0.87rem;
-    line-height: 1.6;
-  }
-  .card-mensagem.aberto .card-mensagem-detalhes{ display: block; }
-  .card-mensagem-detalhes p{ margin: 0 0 8px; }
-  .card-mensagem-detalhes b{ color: var(--chocolate); }
-  .acoes-mensagem{
+
+  .lead-body p{ font-size: 14px; margin: 10px 0; line-height: 1.5; }
+
+  .lead-actions{
     display: flex;
     gap: 10px;
-    margin-top: 12px;
     flex-wrap: wrap;
+    margin-top: 12px;
   }
-  .botao-acao{
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
-    border-radius: 100px;
-    font-size: 0.82rem;
-    font-weight: 600;
+
+  .btn-action{
+    display: inline-block;
+    padding: 9px 16px;
+    border: 2px solid var(--black);
+    border-radius: var(--radius-sm);
+    background: var(--pink);
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 700;
     text-decoration: none;
-    border: 1.5px solid var(--borda);
-    color: var(--chocolate);
-  }
-  .botao-acao.email:hover{ border-color: var(--cereja); color: var(--cereja); }
-  .botao-acao.whatsapp:hover{ border-color: var(--verde-sucesso); color: var(--verde-sucesso); }
-
-  .estado-vazio{
-    text-align: center;
-    padding: 30px 10px;
-    color: var(--chocolate-suave);
-    font-size: 0.88rem;
+    box-shadow: var(--shadow-hard-sm);
+    transition: background .15s ease, transform .1s ease, box-shadow .1s ease;
   }
 
-  /* ---------- Mobile ---------- */
-  .fundo-mobile{
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(61,39,34,0.4);
-    z-index: 15;
-  }
+  .btn-action:hover{ background: var(--pink-dark); }
+
+  .btn-action:active{ transform: translate(3px, 3px); box-shadow: none; }
+
+  .btn-whatsapp{ background: var(--success); }
+  .btn-whatsapp:hover{ background: #235f3d; }
+
+  /* ---------------- Responsivo ---------------- */
   @media (max-width: 900px){
+    .stat-grid{ grid-template-columns: repeat(2, 1fr); }
+    .portfolio-grid{ grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 768px){
+    .menu-toggle{ display: flex; }
+
     .sidebar{
       transform: translateX(-100%);
+      width: 240px;
     }
-    .sidebar.aberta{ transform: translateX(0); }
-    .area-principal{
+
+    .sidebar.open{ transform: translateX(0); }
+
+    .content{
       margin-left: 0;
-      padding: 24px 18px 50px;
+      padding: 84px 20px 50px;
     }
-    .botao-menu-mobile{ display: flex; }
-    .fundo-mobile.aberta{ display: block; }
-    .topo-titulo{ font-size: 1.3rem; }
-    .filtro-periodo{ width: 100%; justify-content: space-between; }
-    .filtro-botao{ flex: 1; text-align: center; padding: 8px 6px; }
+
+    .content-header h1{ font-size: 24px; }
+
+    .lead-email{ margin-left: 0; width: 100%; }
+
+    .floaty{ display: none; }
+  }
+
+  @media (max-width: 480px){
+    .stat-grid{ grid-template-columns: 1fr 1fr; }
+    .contact-highlight{ flex-direction: column; align-items: flex-start; }
+    .period-filters{ width: 100%; justify-content: space-between; }
+    .period-btn{ flex: 1; padding: 8px 6px; }
   }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
 </head>
-<body style="visibility:hidden;">
+<body class="auth-pending">
 
-<div class="fundo-mobile" id="fundo-mobile"></div>
+<div class="app">
 
-<div class="app-shell">
+  <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+  <div class="overlay" id="overlay"></div>
+
+  <span class="floaty" style="top:18px; right:28px; font-size:24px; color:var(--pink); animation-delay:0s;" aria-hidden="true">♥</span>
+  <span class="floaty" style="bottom:24px; right:40px; font-size:20px; color:var(--yellow); animation-delay:1.2s;" aria-hidden="true">★</span>
+
   <aside class="sidebar" id="sidebar">
-    <div class="logo-painel">meu<span class="ponto">.</span>painel</div>
+    <div class="sidebar-top">
+      <div class="logo">meu<span class="dot">.</span>painel</div>
+      <span class="sidebar-star" aria-hidden="true">✦</span>
+    </div>
+
     <nav class="sidebar-nav">
-      <button class="nav-item ativo" data-tab="aba-principal">
+      <button class="nav-item active" data-tab="principal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         Menu Principal
       </button>
-      <button class="nav-item" data-tab="aba-portfolio">
+      <button class="nav-item" data-tab="portfolio">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         Portfólio
       </button>
     </nav>
-    <div class="sidebar-rodape">
-      <div class="sidebar-email" id="sidebar-email"></div>
-      <button class="botao-sair" id="botao-sair">Sair</button>
+
+    <div class="sidebar-footer">
+      <div class="user-email" id="userEmail">...</div>
+      <button class="btn-logout" id="logoutBtn">Sair</button>
     </div>
   </aside>
 
-  <main class="area-principal">
-    <div class="topo-conteudo">
-      <div class="cabecalho-flex">
-        <button class="botao-menu-mobile" id="botao-menu-mobile">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
-        <h1 class="topo-titulo" id="topo-titulo">Menu Principal</h1>
-      </div>
-      <div class="filtro-periodo">
-        <button class="filtro-botao ativo" data-periodo="tudo">Tudo</button>
-        <button class="filtro-botao" data-periodo="7">7d</button>
-        <button class="filtro-botao" data-periodo="30">30d</button>
-        <button class="filtro-botao" data-periodo="90">90d</button>
+  <main class="content">
+    <div class="content-header">
+      <h1 id="pageTitle">Menu Principal</h1>
+      <div class="period-filters">
+        <button class="period-btn active" data-period="all">Tudo</button>
+        <button class="period-btn" data-period="7">7d</button>
+        <button class="period-btn" data-period="30">30d</button>
+        <button class="period-btn" data-period="90">90d</button>
       </div>
     </div>
 
-    <div class="faixa-erro-geral" id="faixa-erro-geral"></div>
-    <div class="loading-geral" id="loading-geral">Carregando seus dados...</div>
+    <div id="globalError" class="banner error" hidden></div>
 
-    <div id="conteudo-abas" style="display:none;">
-      <!-- ABA: Menu Principal -->
-      <section class="aba-painel ativa" id="aba-principal">
-        <p class="saudacao">Olá! Aqui estão os números do seu portfólio.</p>
-        <div class="grade-cards-numero" id="grade-cards-numero"></div>
+    <!-- ===================== ABA: MENU PRINCIPAL ===================== -->
+    <section id="tab-principal" class="tab-panel">
+      <p class="greeting">Olá! Aqui estão os números do seu portfólio.</p>
 
-        <div class="cartao-destaque-contato">
-          <div class="titulo">Clicaram para entrar em contato</div>
-          <div class="valor" id="valor-contato-destaque">0</div>
-          <div class="explicacao">Soma de cliques no WhatsApp, e-mail, Instagram e no botão de enviar do formulário de contato.</div>
+      <div class="stat-grid">
+        <div class="stat-card stat-card--highlight">
+          <div class="stat-number" id="statVisitas">0</div>
+          <div class="stat-label">Visitas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statVisitantes">0</div>
+          <div class="stat-label">Visitantes únicos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statCliques">0</div>
+          <div class="stat-label">Cliques em botões</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statVideos">0</div>
+          <div class="stat-label">Vídeos vistos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statMensagens">0</div>
+          <div class="stat-label">Mensagens</div>
+        </div>
+      </div>
+
+      <div class="card contact-highlight">
+        <div class="stat-number" id="statContato">0</div>
+        <div class="contact-highlight-text">
+          <h3>Clicaram para entrar em contato</h3>
+          <p>Conta quem clicou em WhatsApp, e-mail, Instagram ou no botão de enviar o formulário.</p>
+        </div>
+      </div>
+
+      <div class="card chart-card">
+        <h2>Visitas nos últimos 14 dias</h2>
+        <div class="bars-row" id="chartBars"></div>
+        <div class="chart-tooltip" id="chartTooltip" hidden></div>
+      </div>
+    </section>
+
+    <!-- ===================== ABA: PORTFÓLIO ===================== -->
+    <section id="tab-portfolio" class="tab-panel" hidden>
+      <div class="portfolio-grid">
+        <div class="card wide">
+          <h2>Vídeos mais vistos</h2>
+          <div id="videosList"></div>
         </div>
 
-        <div class="cartao">
-          <div class="cartao-titulo">Visitas nos últimos 14 dias</div>
-          <div class="grafico-barras" id="grafico-barras"></div>
-          <div class="grafico-legenda" id="grafico-legenda"></div>
+        <div class="card">
+          <h2>Botões mais clicados</h2>
+          <div id="buttonsList"></div>
         </div>
-      </section>
 
-      <!-- ABA: Portfólio -->
-      <section class="aba-painel" id="aba-portfolio">
-        <div class="cartao">
-          <div class="cartao-titulo">Vídeos mais vistos</div>
-          <div id="lista-videos"></div>
+        <div class="card">
+          <h2>Cliques para contato</h2>
+          <div id="contactList"></div>
         </div>
-        <div class="cartao">
-          <div class="cartao-titulo">Botões mais clicados</div>
-          <div id="lista-botoes"></div>
+
+        <div class="card wide">
+          <h2>Mensagens recebidas</h2>
+          <div id="leadsList"></div>
         </div>
-        <div class="cartao">
-          <div class="cartao-titulo">Cliques para contato</div>
-          <div id="lista-contato"></div>
-        </div>
-        <div class="cartao">
-          <div class="cartao-titulo">Mensagens recebidas</div>
-          <div id="lista-mensagens"></div>
-        </div>
-      </section>
-    </div>
+      </div>
+    </section>
   </main>
 </div>
 
 <script>
-/* ================================================================
-   PAINEL ADMINISTRATIVO
-   Carrega os dados uma única vez do Supabase e refiltra em memória
-   ao trocar o período ou de aba (sem novas consultas ao banco).
-   ================================================================ */
+(async function () {
 
-let eventos = [];
-let leads = [];
-
-/* Busca todas as linhas de uma tabela, contornando o limite de 1000
-   linhas por consulta do Supabase, buscando em blocos até acabar. */
-async function buscarTudo(tabela) {
-  let tudo = [];
-  let inicio = 0;
-  const tamanhoBloco = 1000;
-
-  while (true) {
-    const { data, error } = await sb
-      .from(tabela)
-      .select("*")
-      .order("created_at", { ascending: false })
-      .range(inicio, inicio + tamanhoBloco - 1);
-
-    if (error) throw new Error(error.message);
-    if (!data || data.length === 0) break;
-
-    tudo = tudo.concat(data);
-    if (data.length < tamanhoBloco) break;
-    inicio += tamanhoBloco;
-  }
-
-  return tudo;
-}
-
-function dataDeCorte(periodo) {
-  if (periodo === "tudo") return null;
-  const dias = parseInt(periodo, 10);
-  const corte = new Date();
-  corte.setDate(corte.getDate() - dias);
-  return corte;
-}
-
-function filtrarPorPeriodo(lista, periodo) {
-  const corte = dataDeCorte(periodo);
-  if (!corte) return lista;
-  return lista.filter((item) => new Date(item.created_at) >= corte);
-}
-
-function formatarNomeEvento(nome) {
-  if (!nome) return "";
-  return nome
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (letra) => letra.toUpperCase());
-}
-
-function formatarData(iso) {
-  const d = new Date(iso);
-  return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
-}
-
-function agrupar(lista, chave) {
-  const mapa = {};
-  lista.forEach((item) => {
-    const k = item[chave] || "outro";
-    mapa[k] = (mapa[k] || 0) + 1;
-  });
-  return Object.entries(mapa).sort((a, b) => b[1] - a[1]);
-}
-
-let periodoAtual = "tudo";
-let abaAtual = "aba-principal";
-
-function renderizarTudo() {
-  const eventosFiltrados = filtrarPorPeriodo(eventos, periodoAtual);
-  const leadsFiltrados = filtrarPorPeriodo(leads, periodoAtual);
-  renderizarMenuPrincipal(eventosFiltrados, leadsFiltrados);
-  renderizarPortfolio(eventosFiltrados, leadsFiltrados);
-}
-
-/* ---------- Aba: Menu Principal ---------- */
-function renderizarMenuPrincipal(eventosF, leadsF) {
-  const visitas = eventosF.filter((e) => e.event_type === "page_view");
-  const cliques = eventosF.filter((e) => e.event_type === "button_click");
-  const videos = eventosF.filter((e) => e.event_type === "video_view");
-
-  const visitantesUnicos = new Set(visitas.map((e) => e.session_id)).size;
-  const cliquesContato = cliques.filter((e) => (e.event_name || "").startsWith("contact_"));
-
-  const cards = [
-    { valor: visitas.length, rotulo: "Visitas", destaque: true },
-    { valor: visitantesUnicos, rotulo: "Visitantes únicos" },
-    { valor: cliques.length, rotulo: "Cliques em botões" },
-    { valor: videos.length, rotulo: "Vídeos vistos" },
-    { valor: leadsF.length, rotulo: "Mensagens" },
-  ];
-
-  const gradeEl = document.getElementById("grade-cards-numero");
-  gradeEl.innerHTML = cards
-    .map(
-      (c) => `
-      <div class="card-numero${c.destaque ? " destaque" : ""}">
-        <div class="card-numero-valor">${c.valor}</div>
-        <div class="card-numero-rotulo">${c.rotulo}</div>
-      </div>`
-    )
-    .join("");
-
-  document.getElementById("valor-contato-destaque").textContent = cliquesContato.length;
-
-  renderizarGrafico14Dias(visitas);
-}
-
-function renderizarGrafico14Dias(visitas) {
-  const dias = [];
-  for (let i = 13; i >= 0; i--) {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    d.setDate(d.getDate() - i);
-    dias.push(d);
-  }
-
-  const contagens = dias.map((dia) => {
-    const proximoDia = new Date(dia);
-    proximoDia.setDate(proximoDia.getDate() + 1);
-    return visitas.filter((v) => {
-      const dt = new Date(v.created_at);
-      return dt >= dia && dt < proximoDia;
-    }).length;
-  });
-
-  const maximo = Math.max(1, ...contagens);
-  const graficoEl = document.getElementById("grafico-barras");
-  const legendaEl = document.getElementById("grafico-legenda");
-
-  if (contagens.every((c) => c === 0)) {
-    graficoEl.innerHTML = '<div class="estado-vazio">Nenhuma visita registrada ainda.</div>';
-    legendaEl.innerHTML = "";
-    return;
-  }
-
-  graficoEl.innerHTML = dias
-    .map((dia, i) => {
-      const alturaPct = Math.max(2, Math.round((contagens[i] / maximo) * 100));
-      const rotuloData = dia.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
-      return `
-        <div class="barra-dia-wrap">
-          <div class="dica">${rotuloData}: ${contagens[i]}</div>
-          <div class="barra-dia" style="height:${alturaPct}%"></div>
-        </div>`;
-    })
-    .join("");
-
-  legendaEl.innerHTML = `<span>${dias[0].toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}</span><span>${dias[13].toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}</span>`;
-}
-
-/* ---------- Aba: Portfólio ---------- */
-function renderizarPortfolio(eventosF, leadsF) {
-  const videos = eventosF.filter((e) => e.event_type === "video_view");
-  const botoes = eventosF.filter((e) => e.event_type === "button_click");
-  const botoesContato = botoes.filter((e) => (e.event_name || "").startsWith("contact_"));
-
-  renderizarVideos(videos);
-  renderizarBotoes(botoes);
-  renderizarContato(botoesContato);
-  renderizarMensagens(leadsF);
-}
-
-function renderizarVideos(videos) {
-  const el = document.getElementById("lista-videos");
-  if (videos.length === 0) {
-    el.innerHTML = '<div class="estado-vazio">Nenhum vídeo visto ainda.</div>';
-    return;
-  }
-
-  const mapa = {};
-  videos.forEach((v) => {
-    const id = v.event_name;
-    if (!mapa[id]) {
-      mapa[id] = { contagem: 0, titulo: (v.metadata && v.metadata.title) || id };
-    }
-    mapa[id].contagem++;
-  });
-
-  const lista = Object.entries(mapa).sort((a, b) => b[1].contagem - a[1].contagem);
-  const maximo = lista[0][1].contagem;
-
-  el.innerHTML = lista
-    .map(([id, info]) => {
-      const pct = Math.max(4, Math.round((info.contagem / maximo) * 100));
-      return `
-        <div class="item-lista">
-          <a href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">
-            <img src="https://i.ytimg.com/vi/${id}/mqdefault.jpg" alt="">
-          </a>
-          <div class="item-lista-info">
-            <div class="item-lista-titulo"><a href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">${info.titulo}</a></div>
-            <div class="barra-proporcional-fundo"><div class="barra-proporcional-preenchimento" style="width:${pct}%"></div></div>
-          </div>
-          <div class="item-lista-contagem">${info.contagem}</div>
-        </div>`;
-    })
-    .join("");
-}
-
-function renderizarBotoes(botoes) {
-  const el = document.getElementById("lista-botoes");
-  if (botoes.length === 0) {
-    el.innerHTML = '<div class="estado-vazio">Nenhum clique registrado ainda.</div>';
-    return;
-  }
-
-  const grupos = agrupar(botoes, "event_name");
-  const maximo = grupos[0][1];
-
-  el.innerHTML = grupos
-    .map(([nome, contagem]) => {
-      const pct = Math.max(4, Math.round((contagem / maximo) * 100));
-      return `
-        <div class="item-lista">
-          <div class="item-lista-info">
-            <div class="item-lista-titulo">${formatarNomeEvento(nome)}</div>
-            <div class="barra-proporcional-fundo"><div class="barra-proporcional-preenchimento" style="width:${pct}%"></div></div>
-          </div>
-          <div class="item-lista-contagem">${contagem}</div>
-        </div>`;
-    })
-    .join("");
-}
-
-function renderizarContato(botoesContato) {
-  const el = document.getElementById("lista-contato");
-  if (botoesContato.length === 0) {
-    el.innerHTML = '<div class="estado-vazio">Nenhum clique para contato ainda.</div>';
-    return;
-  }
-
-  const grupos = agrupar(botoesContato, "event_name");
-  el.innerHTML = grupos
-    .map(
-      ([nome, contagem]) => `
-      <div class="linha-contato">
-        <span>${formatarNomeEvento(nome)}</span>
-        <span class="linha-contato-valor">${contagem}</span>
-      </div>`
-    )
-    .join("");
-}
-
-function renderizarMensagens(leadsF) {
-  const el = document.getElementById("lista-mensagens");
-  if (leadsF.length === 0) {
-    el.innerHTML = '<div class="estado-vazio">Nenhuma mensagem por enquanto.</div>';
-    return;
-  }
-
-  el.innerHTML = leadsF
-    .map((lead, i) => {
-      const origemTexto = lead.source === "popup" ? "Popup" : "Contato";
-      const telefoneDigitos = (lead.phone || "").replace(/\D/g, "");
-      return `
-        <div class="card-mensagem" data-idx="${i}">
-          <div class="card-mensagem-topo">
-            <span class="selo-origem">${origemTexto}</span>
-            <span class="card-mensagem-nome">${lead.name || "Sem nome"}</span>
-            <span class="card-mensagem-data">${formatarData(lead.created_at)}</span>
-          </div>
-          <div class="card-mensagem-email">${lead.email || ""}</div>
-          <div class="card-mensagem-detalhes">
-            ${lead.phone ? `<p><b>Telefone:</b> ${lead.phone}</p>` : ""}
-            ${lead.brand ? `<p><b>Marca:</b> ${lead.brand}</p>` : ""}
-            ${lead.budget ? `<p><b>Orçamento:</b> ${lead.budget}</p>` : ""}
-            ${lead.message ? `<p><b>Mensagem:</b> ${lead.message}</p>` : ""}
-            <div class="acoes-mensagem">
-              ${lead.email ? `<a class="botao-acao email" href="mailto:${lead.email}">Responder por e-mail</a>` : ""}
-              ${telefoneDigitos ? `<a class="botao-acao whatsapp" href="https://wa.me/${telefoneDigitos}" target="_blank" rel="noopener">WhatsApp</a>` : ""}
-            </div>
-          </div>
-        </div>`;
-    })
-    .join("");
-
-  el.querySelectorAll(".card-mensagem").forEach((card) => {
-    card.addEventListener("click", (e) => {
-      if (e.target.closest("a")) return;
-      card.classList.toggle("aberto");
-    });
-  });
-}
-
-/* ---------- Navegação: abas, período, sidebar mobile ---------- */
-function configurarNavegacao() {
-  const titulos = {
-    "aba-principal": "Menu Principal",
-    "aba-portfolio": "Portfólio",
-  };
-
-  document.querySelectorAll(".nav-item").forEach((botao) => {
-    botao.addEventListener("click", () => {
-      const alvo = botao.dataset.tab;
-      abaAtual = alvo;
-
-      document.querySelectorAll(".nav-item").forEach((b) => b.classList.remove("ativo"));
-      botao.classList.add("ativo");
-
-      document.querySelectorAll(".aba-painel").forEach((p) => p.classList.remove("ativa"));
-      document.getElementById(alvo).classList.add("ativa");
-
-      document.getElementById("topo-titulo").textContent = titulos[alvo];
-      fecharSidebarMobile();
-    });
-  });
-
-  document.querySelectorAll(".filtro-botao").forEach((botao) => {
-    botao.addEventListener("click", () => {
-      periodoAtual = botao.dataset.periodo;
-      document.querySelectorAll(".filtro-botao").forEach((b) => b.classList.remove("ativo"));
-      botao.classList.add("ativo");
-      renderizarTudo();
-    });
-  });
-
-  document.getElementById("botao-sair").addEventListener("click", () => {
-    Auth.logout();
-  });
-
-  document.getElementById("botao-menu-mobile").addEventListener("click", () => {
-    document.getElementById("sidebar").classList.add("aberta");
-    document.getElementById("fundo-mobile").classList.add("aberta");
-  });
-  document.getElementById("fundo-mobile").addEventListener("click", fecharSidebarMobile);
-}
-
-function fecharSidebarMobile() {
-  document.getElementById("sidebar").classList.remove("aberta");
-  document.getElementById("fundo-mobile").classList.remove("aberta");
-}
-
-/* ---------- Inicialização ---------- */
-(async function iniciar() {
+  /* ============================================================
+     1) GUARDA DE AUTENTICAÇÃO
+     Nada do painel é exibido antes da sessão ser confirmada.
+     ============================================================ */
   const usuario = await Auth.checkAuth();
-  if (!usuario) return;
+  if (!usuario) return; // Auth.checkAuth já redireciona para login.html
 
-  document.body.style.visibility = "visible";
-  document.getElementById("sidebar-email").textContent = usuario.email;
-  configurarNavegacao();
+  document.getElementById('userEmail').textContent = usuario.email;
+  document.body.classList.remove('auth-pending');
+
+  /* ============================================================
+     2) NAVEGAÇÃO: abas, período e menu mobile
+     ============================================================ */
+  const tabButtons = document.querySelectorAll('.nav-item');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+  const pageTitle = document.getElementById('pageTitle');
+  const periodButtons = document.querySelectorAll('.period-btn');
+  const menuToggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const globalError = document.getElementById('globalError');
+
+  const TITULOS = { principal: 'Menu Principal', portfolio: 'Portfólio' };
+  let currentPeriod = 'all';
+
+  logoutBtn.addEventListener('click', () => Auth.logout());
+
+  function fecharGaveta() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('visible');
+  }
+
+  menuToggle.addEventListener('click', () => {
+    sidebar.classList.add('open');
+    overlay.classList.add('visible');
+  });
+  overlay.addEventListener('click', fecharGaveta);
+
+  tabButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      tabButtons.forEach((b) => b.classList.toggle('active', b === btn));
+      tabPanels.forEach((p) => { p.hidden = p.id !== `tab-${tab}`; });
+      pageTitle.textContent = TITULOS[tab];
+      fecharGaveta();
+    });
+  });
+
+  periodButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      periodButtons.forEach((b) => b.classList.toggle('active', b === btn));
+      currentPeriod = btn.dataset.period;
+      render();
+    });
+  });
+
+  /* ============================================================
+     3) CARREGAMENTO DOS DADOS (uma única vez, com paginação)
+     O Supabase devolve no máximo 1000 linhas por consulta, então
+     buscamos em blocos de 1000 até a tabela acabar.
+     ============================================================ */
+  async function buscarTudo(tabela) {
+    const TAMANHO_BLOCO = 1000;
+    let tudo = [];
+    let inicio = 0;
+
+    while (true) {
+      const { data, error } = await Auth.client
+        .from(tabela)
+        .select('*')
+        .order('created_at', { ascending: false })
+        .range(inicio, inicio + TAMANHO_BLOCO - 1);
+
+      if (error) throw error;
+
+      tudo = tudo.concat(data || []);
+
+      if (!data || data.length < TAMANHO_BLOCO) break;
+      inicio += TAMANHO_BLOCO;
+    }
+
+    return tudo;
+  }
+
+  let eventsCache = [];
+  let leadsCache = [];
 
   try {
-    [eventos, leads] = await Promise.all([buscarTudo("portfolio_events"), buscarTudo("portfolio_leads")]);
-    document.getElementById("loading-geral").style.display = "none";
-    document.getElementById("conteudo-abas").style.display = "block";
-    renderizarTudo();
-  } catch (erro) {
-    document.getElementById("loading-geral").style.display = "none";
-    const faixa = document.getElementById("faixa-erro-geral");
-    faixa.textContent = "Não foi possível carregar os dados agora. Tente recarregar a página em instantes.";
-    faixa.style.display = "block";
+    [eventsCache, leadsCache] = await Promise.all([
+      buscarTudo('portfolio_events'),
+      buscarTudo('portfolio_leads'),
+    ]);
+  } catch (err) {
+    console.error('Erro ao carregar dados do Supabase:', err);
+    globalError.hidden = false;
+    globalError.textContent = 'Não foi possível carregar os dados agora. Tente novamente mais tarde.';
   }
+
+  /* ============================================================
+     4) FUNÇÕES AUXILIARES
+     ============================================================ */
+  function escapeHtml(valor) {
+    if (valor === null || valor === undefined) return '';
+    return String(valor)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function numeroPt(n) {
+    return (n || 0).toLocaleString('pt-BR');
+  }
+
+  function filtrarPorPeriodo(linhas, periodo) {
+    if (periodo === 'all') return linhas;
+    const dias = parseInt(periodo, 10);
+    const corte = Date.now() - dias * 24 * 60 * 60 * 1000;
+    return linhas.filter((r) => new Date(r.created_at).getTime() >= corte);
+  }
+
+  function formatarNomeBotao(nome) {
+    return nome
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+
+  function computeStats(events, leads) {
+    const pageViews = events.filter((e) => e.event_type === 'page_view');
+    const visitantesUnicos = new Set(pageViews.map((e) => e.session_id)).size;
+    const buttonClicks = events.filter((e) => e.event_type === 'button_click');
+    const videoViews = events.filter((e) => e.event_type === 'video_view');
+    const contatoClicks = buttonClicks.filter((e) => e.event_name && e.event_name.startsWith('contact_'));
+
+    return {
+      visitas: pageViews.length,
+      visitantesUnicos,
+      cliques: buttonClicks.length,
+      videos: videoViews.length,
+      mensagens: leads.length,
+      contato: contatoClicks.length,
+    };
+  }
+
+  function computeTopVideos(events) {
+    const mapa = new Map();
+    events
+      .filter((e) => e.event_type === 'video_view')
+      .forEach((e) => {
+        const id = e.event_name || 'desconhecido';
+        const titulo = (e.metadata && e.metadata.title) || id;
+        if (!mapa.has(id)) mapa.set(id, { id, titulo, count: 0 });
+        mapa.get(id).count += 1;
+      });
+    return Array.from(mapa.values()).sort((a, b) => b.count - a.count);
+  }
+
+  function computeTopButtons(events) {
+    const mapa = new Map();
+    events
+      .filter((e) => e.event_type === 'button_click')
+      .forEach((e) => {
+        const nome = e.event_name || 'desconhecido';
+        mapa.set(nome, (mapa.get(nome) || 0) + 1);
+      });
+    return Array.from(mapa.entries())
+      .map(([nome, count]) => ({ nome, count }))
+      .sort((a, b) => b.count - a.count);
+  }
+
+  /* ============================================================
+     5) RENDERIZAÇÃO, ABA MENU PRINCIPAL
+     ============================================================ */
+  function renderPrincipal(events, leads) {
+    const stats = computeStats(events, leads);
+
+    document.getElementById('statVisitas').textContent = numeroPt(stats.visitas);
+    document.getElementById('statVisitantes').textContent = numeroPt(stats.visitantesUnicos);
+    document.getElementById('statCliques').textContent = numeroPt(stats.cliques);
+    document.getElementById('statVideos').textContent = numeroPt(stats.videos);
+    document.getElementById('statMensagens').textContent = numeroPt(stats.mensagens);
+    document.getElementById('statContato').textContent = numeroPt(stats.contato);
+
+    renderChart(events);
+  }
+
+  let tooltipTimeout = null;
+
+  function renderChart(events) {
+    const container = document.getElementById('chartBars');
+    const tooltip = document.getElementById('chartTooltip');
+    container.innerHTML = '';
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const dias = [];
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date(hoje);
+      d.setDate(d.getDate() - i);
+      dias.push(d);
+    }
+
+    const contagens = dias.map((dia) => {
+      const inicio = dia.getTime();
+      const fim = inicio + 24 * 60 * 60 * 1000;
+      return events.filter((e) => {
+        if (e.event_type !== 'page_view') return false;
+        const t = new Date(e.created_at).getTime();
+        return t >= inicio && t < fim;
+      }).length;
+    });
+
+    const max = Math.max(1, ...contagens);
+
+    dias.forEach((dia, idx) => {
+      const count = contagens[idx];
+      const pct = Math.max(4, Math.round((count / max) * 100));
+
+      const wrap = document.createElement('div');
+      wrap.className = 'bar-wrap';
+
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      bar.style.height = pct + '%';
+      wrap.appendChild(bar);
+
+      const dataFormatada = dia.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+      const textoTooltip = `${dataFormatada}: ${count} ${count === 1 ? 'visita' : 'visitas'}`;
+
+      wrap.addEventListener('mouseenter', () => {
+        tooltip.textContent = textoTooltip;
+        tooltip.hidden = false;
+        tooltip.style.left = (wrap.offsetLeft + wrap.offsetWidth / 2) + 'px';
+        tooltip.style.top = '28px';
+      });
+      wrap.addEventListener('mouseleave', () => { tooltip.hidden = true; });
+
+      container.appendChild(wrap);
+    });
+  }
+
+  /* ============================================================
+     6) RENDERIZAÇÃO, ABA PORTFÓLIO
+     ============================================================ */
+  function renderPortfolio(events, leads) {
+    renderVideos(events);
+    renderButtons(events);
+    renderContatos(events);
+    renderLeads(leads);
+  }
+
+  function renderVideos(events) {
+    const container = document.getElementById('videosList');
+    const videos = computeTopVideos(events);
+
+    if (videos.length === 0) {
+      container.innerHTML = '<p class="empty-state">Nenhum vídeo assistido ainda.</p>';
+      return;
+    }
+
+    const max = videos[0].count;
+    container.innerHTML = videos.map((v) => {
+      const idSeguro = encodeURIComponent(v.id);
+      const url = `https://www.youtube.com/watch?v=${idSeguro}`;
+      const pct = Math.max(4, Math.round((v.count / max) * 100));
+      return `
+        <div class="video-row">
+          <a href="${url}" target="_blank" rel="noopener">
+            <img class="video-thumb" src="https://i.ytimg.com/vi/${idSeguro}/mqdefault.jpg" alt="${escapeHtml(v.titulo)}" loading="lazy">
+          </a>
+          <div class="video-info">
+            <a href="${url}" target="_blank" rel="noopener" class="video-title">${escapeHtml(v.titulo)}</a>
+            <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+          </div>
+          <div class="video-count">${numeroPt(v.count)}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderButtons(events) {
+    const container = document.getElementById('buttonsList');
+    const botoes = computeTopButtons(events);
+
+    if (botoes.length === 0) {
+      container.innerHTML = '<p class="empty-state">Nenhum clique registrado ainda.</p>';
+      return;
+    }
+
+    const max = botoes[0].count;
+    container.innerHTML = botoes.map((b) => `
+      <div class="button-row">
+        <div class="button-name">${escapeHtml(formatarNomeBotao(b.nome))}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.max(4, Math.round((b.count / max) * 100))}%"></div></div>
+        <div class="video-count">${numeroPt(b.count)}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderContatos(events) {
+    const container = document.getElementById('contactList');
+    const contatos = computeTopButtons(events).filter((b) => b.nome.startsWith('contact_'));
+
+    if (contatos.length === 0) {
+      container.innerHTML = '<p class="empty-state">Nenhum clique de contato ainda.</p>';
+      return;
+    }
+
+    const max = contatos[0].count;
+    container.innerHTML = contatos.map((c) => `
+      <div class="contact-row">
+        <div class="button-name">${escapeHtml(formatarNomeBotao(c.nome.replace('contact_', '')))}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.max(4, Math.round((c.count / max) * 100))}%"></div></div>
+        <div class="video-count">${numeroPt(c.count)}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderLeads(leads) {
+    const container = document.getElementById('leadsList');
+
+    if (leads.length === 0) {
+      container.innerHTML = '<p class="empty-state">Nenhuma mensagem por enquanto.</p>';
+      return;
+    }
+
+    container.innerHTML = leads.map((lead) => {
+      const data = new Date(lead.created_at).toLocaleDateString('pt-BR', {
+        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
+      });
+      const origemLabel = lead.source === 'popup' ? 'Popup' : 'Contato';
+      const origemClasse = lead.source === 'popup' ? 'popup' : 'contact';
+      const digitosTelefone = (lead.phone || '').replace(/\D/g, '');
+      const botaoWhatsapp = digitosTelefone
+        ? `<a class="btn-action btn-whatsapp" href="https://wa.me/${digitosTelefone}" target="_blank" rel="noopener">Chamar no WhatsApp</a>`
+        : '';
+
+      return `
+        <details class="lead-card">
+          <summary>
+            <span class="lead-badge lead-badge--${origemClasse}">${escapeHtml(origemLabel)}</span>
+            <span class="lead-name">${escapeHtml(lead.name || 'Sem nome')}</span>
+            <span class="lead-date">${data}</span>
+            <span class="lead-email">${escapeHtml(lead.email || '')}</span>
+          </summary>
+          <div class="lead-body">
+            <p><strong>Telefone:</strong> ${escapeHtml(lead.phone || 'Não informado')}</p>
+            <p><strong>Marca:</strong> ${escapeHtml(lead.brand || 'Não informado')}</p>
+            <p><strong>Orçamento:</strong> ${escapeHtml(lead.budget || 'Não informado')}</p>
+            <p><strong>Mensagem:</strong> ${escapeHtml(lead.message || 'Sem mensagem')}</p>
+            <div class="lead-actions">
+              <a class="btn-action" href="mailto:${escapeHtml(lead.email || '')}">Responder por e-mail</a>
+              ${botaoWhatsapp}
+            </div>
+          </div>
+        </details>
+      `;
+    }).join('');
+  }
+
+  /* ============================================================
+     7) RENDERIZAÇÃO GERAL (chamada ao carregar e ao trocar período)
+     ============================================================ */
+  function render() {
+    const events = filtrarPorPeriodo(eventsCache, currentPeriod);
+    const leads = filtrarPorPeriodo(leadsCache, currentPeriod);
+    renderPrincipal(events, leads);
+    renderPortfolio(events, leads);
+  }
+
+  render();
 })();
 </script>
-
 </body>
 </html>

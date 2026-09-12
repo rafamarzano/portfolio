@@ -6,8 +6,8 @@
    tem permissao de INSERIR nessas tabelas, nunca de ler o que ja
    foi gravado, entao e segura para ficar no navegador do visitante.
    ================================================================ */
-const TRACKING_SUPABASE_URL = "https://yoqariscwuozvgpbdazh.supabase.co";
-const TRACKING_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlvcWFyaXNjd3VvenZncGJkYXpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2Nzk5OTAsImV4cCI6MjEwMDI1NTk5MH0.VI1H1VktNlYFW5TpJybxt4lYtMCT3O1roJW7sp3JnH0";
+const TRACKING_SUPABASE_URL = "https://qdxsydfrbirjoamqbodb.supabase.co";
+const TRACKING_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkeHN5ZGZyYmlyam9hbXFib2RiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyNDEyNTMsImV4cCI6MjEwNDgxNzI1M30.zoHorj5O27aWzkzFvHoIAhIlFgLIpJecWXvKF-NxfBU";
 
 const trackingClient = window.supabase.createClient(TRACKING_SUPABASE_URL, TRACKING_SUPABASE_ANON_KEY);
 
