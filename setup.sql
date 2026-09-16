@@ -86,3 +86,99 @@ create policy "Inserção pública de mensagens"
   for insert
   to anon
   with check (true);
+
+-- ------------------------------------------------------------
+-- Tabela: calendar_events
+-- Agenda pessoal da aba Calendário do painel. Só quem faz login
+-- (você) le e escreve aqui, nunca o público do site.
+-- ------------------------------------------------------------
+create table if not exists public.calendar_events (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  event_date date not null,
+  event_time text,               -- 'HH:MM', opcional
+  color text not null default '#FF1493',
+  done boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_calendar_events_date
+  on public.calendar_events (event_date);
+
+alter table public.calendar_events enable row level security;
+
+create policy "Painel autenticado gerencia a agenda"
+  on public.calendar_events
+  for all
+  to authenticated
+  using (true)
+  with check (true);
+
+-- ------------------------------------------------------------
+-- Tabela: brand_deals
+-- Aba UGC/Publi: trabalhos com marcas (prospecção, roteiro,
+-- produção, entregue, pago). Só quem faz login le e escreve.
+-- ------------------------------------------------------------
+create table if not exists public.brand_deals (
+  id uuid primary key default gen_random_uuid(),
+  brand text not null,
+  status text not null default 'prospeccao', -- prospeccao | roteiro | producao | entregue | pago
+  value numeric,
+  deadline date,
+  notes text,
+  created_at timestamptz not null default now()
+);
+
+alter table public.brand_deals enable row level security;
+
+create policy "Painel autenticado gerencia trabalhos"
+  on public.brand_deals
+  for all
+  to authenticated
+  using (true)
+  with check (true);
+
+-- ------------------------------------------------------------
+-- Tabela: content_ideas
+-- Aba Planejador: banco de ideias de conteúdo, organizado por
+-- categoria e status.
+-- ------------------------------------------------------------
+create table if not exists public.content_ideas (
+  id uuid primary key default gen_random_uuid(),
+  category text not null default 'criacao', -- criacao | edicao | ugc | lifestyle
+  title text not null,
+  status text not null default 'nao_iniciado', -- nao_iniciado | roteiro_pronto | gravado | publicado
+  created_at timestamptz not null default now()
+);
+
+alter table public.content_ideas enable row level security;
+
+create policy "Painel autenticado gerencia ideias"
+  on public.content_ideas
+  for all
+  to authenticated
+  using (true)
+  with check (true);
+
+-- ------------------------------------------------------------
+-- Tabela: clients
+-- Aba Clientes: cadastro simples de contatos e marcas.
+-- ------------------------------------------------------------
+create table if not exists public.clients (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  company text,
+  email text,
+  phone text,
+  notes text,
+  created_at timestamptz not null default now()
+);
+
+alter table public.clients enable row level security;
+
+create policy "Painel autenticado gerencia clientes"
+  on public.clients
+  for all
+  to authenticated
+  using (true)
+  with check (true);
