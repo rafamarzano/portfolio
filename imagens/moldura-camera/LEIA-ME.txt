@@ -1,0 +1,16 @@
+COMO USAR ESSA PASTA
+=====================
+
+Coloque aqui a moldura/PNG da camera digital (o "corpo" da camera,
+de preferencia com fundo TRANSPARENTE) que voce quer usar em volta
+de uma das 3 fotos do hero.
+
+Hoje essa camera esta desenhada em CSS puro (tela + dial + zoom +
+roda de navegacao). Se voce colocar uma imagem de moldura aqui, eu
+troco pela imagem de verdade, encaixando a foto por baixo do "vidro"
+da tela.
+
+- Formato ideal: PNG com fundo transparente, proporcao parecida com
+  16:10 (paisagem, tipo tela de camera compacta).
+- So me avisar o nome do arquivo que voce colocou que eu conecto no
+  lugar da camera desenhada em CSS.
