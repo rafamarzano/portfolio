@@ -1232,6 +1232,9 @@
               Status
               <select id="dealStatus">
                 <option value="prospeccao">Prospecção</option>
+                <option value="contrato_pendente">Aguardando assinatura do contrato</option>
+                <option value="contrato_assinado">Contrato assinado</option>
+                <option value="aguardando_produto">Esperando o produto</option>
                 <option value="roteiro">Roteiro</option>
                 <option value="producao">Em produção</option>
                 <option value="entregue">Entregue</option>
@@ -2142,6 +2145,9 @@
 
   const DEAL_STATUS_LABELS = {
     prospeccao: 'Prospecção',
+    contrato_pendente: 'Aguardando contrato',
+    contrato_assinado: 'Contrato assinado',
+    aguardando_produto: 'Esperando o produto',
     roteiro: 'Roteiro',
     producao: 'Em produção',
     entregue: 'Entregue',
@@ -2150,6 +2156,9 @@
 
   const DEAL_STATUS_CORES = {
     prospeccao: '#F0F0F0',
+    contrato_pendente: '#FFD9A8',
+    contrato_assinado: '#D4C4F5',
+    aguardando_produto: '#FFF3A0',
     roteiro: '#ADD8E6',
     producao: '#FFEB3B',
     entregue: '#FFB6D9',
