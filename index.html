@@ -566,7 +566,8 @@ section{ position:relative; padding:100px 0 90px; }
    CASE DE SUCESSO — antes da seção de vídeos
    ========================================================================== */
 .case{ background:var(--white); border-bottom:3px dashed var(--black); }
-.case-grid{ display:flex; flex-wrap:wrap; justify-content:center; gap:48px; margin-bottom:32px; }
+.case-grid{ display:flex; flex-direction:column; align-items:center; gap:64px; margin-bottom:32px; }
+.case-par{ display:flex; flex-wrap:wrap; justify-content:center; gap:48px; width:100%; }
 .case-video{ width:100%; max-width:320px; }
 .case-video .cover{ aspect-ratio:9/16; }
 .case-video-metric{
@@ -1065,6 +1066,7 @@ section{ position:relative; padding:100px 0 90px; }
       </div>
     </div>
     <div class="case-grid reveal">
+      <div class="case-par">
       <div class="case-video vcard" tabindex="0" role="button" id="caseVideoCard" aria-label="Assistir case de sucesso" data-video-id="0DwORexkXMs" data-video-url="https://youtube.com/shorts/0DwORexkXMs">
         <div class="cover">
           <span class="cat-tag" data-i18n="caseTag">case de sucesso</span>
@@ -1073,7 +1075,7 @@ section{ position:relative; padding:100px 0 90px; }
             <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--black)"><path d="M8 5v14l11-7z"/></svg>
           </span></div>
         </div>
-        <div class="case-video-metric" data-i18n="caseMetric">+600 mil visualizações</div>
+        <div class="case-video-metric" data-i18n="caseMetric">+1M visualizações</div>
       </div>
       <!-- [EDITAR] depois de salvar o print das métricas em imagens/portfolio-fotos/case-sucesso-metricas.png
            (mesmo nome do arquivo abaixo), ele substitui este quadro automaticamente. O quadro
@@ -1083,6 +1085,28 @@ section{ position:relative; padding:100px 0 90px; }
           onload="this.closest('.ph').classList.add('tem-imagem')"
           onerror="this.remove()">
         <span class="ph-texto" data-i18n-html="casePlaceholder">📊 cole aqui o print das métricas<br><small>imagens/portfolio-fotos/case-sucesso-metricas.png</small></span>
+      </div>
+      </div>
+      <div class="case-par">
+      <div class="case-video vcard" tabindex="0" role="button" id="caseVideoCard2" aria-label="Assistir case de sucesso" data-video-id="Vmw91tOkkgs" data-video-url="https://youtube.com/shorts/Vmw91tOkkgs">
+        <div class="cover">
+          <span class="cat-tag" data-i18n="caseTag">case de sucesso</span>
+          <img class="cover-img" src="https://i.ytimg.com/vi/Vmw91tOkkgs/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/Vmw91tOkkgs/hqdefault.jpg';" alt="" loading="lazy">
+          <div class="play"><span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--black)"><path d="M8 5v14l11-7z"/></svg>
+          </span></div>
+        </div>
+        <div class="case-video-metric" data-i18n="caseMetric2">+5M visualizações</div>
+      </div>
+      <!-- [EDITAR] depois de salvar o print das métricas em imagens/portfolio-fotos/case-sucesso-metricas-2.png
+           (mesmo nome do arquivo abaixo), ele substitui este quadro automaticamente. O quadro
+           fica no mesmo enquadramento 9:16 do vídeo ao lado, pra ficarem do mesmo tamanho. -->
+      <div class="ph ph-upload case-metric-ph">
+        <img class="ph-img" src="imagens/portfolio-fotos/case-sucesso-metricas-2.png" alt=""
+          onload="this.closest('.ph').classList.add('tem-imagem')"
+          onerror="this.remove()">
+        <span class="ph-texto" data-i18n-html="casePlaceholder">📊 cole aqui o print das métricas<br><small>imagens/portfolio-fotos/case-sucesso-metricas-2.png</small></span>
+      </div>
       </div>
     </div>
   </div>
@@ -1362,7 +1386,7 @@ const CATEGORIES = [
   { key: "moda", labelPt: "moda e acessórios", labelEn: "fashion & accessories", subPt: "outfits que dão vontade de comprar", subEn: "outfits that make you want to shop" },
   { key: "ads", labelPt: "ads", labelEn: "ads", subPt: "conteúdo pensado pra performar como anúncio", subEn: "content designed to perform as an ad" },
   { key: "tech", labelPt: "tech", labelEn: "tech", subPt: "apps e tech em linguagem humana", subEn: "apps and tech in human language" },
-  { key: "gastronomia", labelPt: "gastronomia", labelEn: "food", subPt: "receitas e sabores que dão água na boca", subEn: "recipes and flavors that make your mouth water" },
+  { key: "gastronomia", labelPt: "alimentos e bebidas", labelEn: "food & beverages", subPt: "receitas e sabores que dão água na boca", subEn: "recipes and flavors that make your mouth water" },
   { key: "decor", labelPt: "home/decor", labelEn: "home/decor", subPt: "ambientes que inspiram", subEn: "spaces that inspire" },
   { key: "wellness-fit", labelPt: "wellness/fit", labelEn: "wellness/fit", subPt: "rotina saudável sem parecer chato", subEn: "healthy routine that doesn't feel boring" },
 ];
@@ -1390,9 +1414,13 @@ const VIDEOS = [
   { title: "Haircare – Pantene", id: "OqADOIezdro", capa: "capa-haircare-pantene.jpg", cats: ["beleza", "ads"], subcat: "haircare", progress: 82 },
   { title: "Haircare – Elseve", id: "MhpClbp7ydE", capa: "capa-haircare-elseve.jpg", cats: ["beleza", "ads"], subcat: "haircare", progress: 78 },
   { title: "Skincare ASMR – Garnier", id: "kfmjTGT1gL0", capa: "capa-skincare-garnier-asmr.jpg", cats: ["beleza"], subcat: "skincare", progress: 74 },
+  { title: "Haircare cachos esculturais – Dove", id: "Q50pEzG35QU", cats: ["beleza"], subcat: "haircare", progress: 71 },
   { title: "Coleção Camisa Brasil – Hering (Versão 1)", id: "VJhkm73EYhU", cats: ["moda"], progress: 72 },
   { title: "Uma peça, sete looks – Shein", id: "msCW92ZLvnU", capa: "capa-shein-sete-looks.jpg", cats: ["moda"], progress: 90 },
   { title: "Promo – Óculos Zoss", id: "sEZFEhOwtE0", cats: ["moda", "ads"], progress: 75 },
+  { title: "Campanha Black Popozuda – Clarinha", id: "6Wmtfopr-88", cats: ["beleza", "ads"], subcat: "skincare", progress: 77 },
+  { title: "Campanha Black Popozuda – Creme termoativador", id: "rIrspTnrkOk", cats: ["beleza", "ads"], subcat: "skincare", progress: 64 },
+  { title: "Campanha Black Popozuda – Sérum lisinha", id: "MOWcaNUOhdw", cats: ["beleza", "ads"], subcat: "skincare", progress: 69 },
   { title: "Acessório Dia dos Pais – Gemany", id: "D1PXnbh-mig", cats: ["moda"], progress: 48 },
   { title: "Coleção Camisa Brasil – Hering (Versão 2)", id: "TyRHn7K93JM", cats: ["moda"], progress: 68 },
   { title: "Unboxing de roupas – Temu", id: "h8v-Lkg7GYw", capa: "capa-unboxing-temu.jpg", cats: ["moda"], progress: 66 },
@@ -1405,6 +1433,7 @@ const VIDEOS = [
   { title: "Passaporte de pontos – Decolar", id: "DnmtUWxcj-0", cats: ["tech"], progress: 50 },
   { title: "Promo – Bacio di Latte", id: "PZXHUwaRA58", cats: ["gastronomia", "ads"], progress: 88 },
   { title: "Receita – LaCreme", id: "Bv-hVPY1w54", cats: ["gastronomia"], progress: 54 },
+  { title: "Vídeo game edição Go! Jelly", id: "1vv2NzLQ9dI", cats: ["gastronomia", "moda"], progress: 66 },
   { title: "Gel de unha – Bluwe", id: "kwDV78lrpYU", cats: ["ads"], progress: 69 },
   { title: "Luminária Cogumelo", id: "udcFJBn_Ycw", cats: ["decor"], progress: 45 },
   { title: "Kit de Velas – Temu", id: "1BbS9kiljks", cats: ["decor"], progress: 49 },
@@ -1661,12 +1690,13 @@ photoGrid.innerHTML = PHOTOS.map(p => `
 // erro 153 ao tentar tocar aqui dentro. Pra tocar dentro do site, like os outros vídeos,
 // é preciso habilitar isso nas configurações avançadas do vídeo (ou trocar por outro
 // vídeo que já permita). Até lá, o card abre e mostra esse erro do próprio YouTube.
-const caseVideoCard = document.getElementById('caseVideoCard');
-if(caseVideoCard){
+['caseVideoCard', 'caseVideoCard2'].forEach(idCard => {
+  const caseVideoCard = document.getElementById(idCard);
+  if(!caseVideoCard) return;
   const abrirCase = () => openVideoLightbox(caseVideoCard.dataset.videoId, L('Case de sucesso', 'Success case'));
   caseVideoCard.addEventListener('click', abrirCase);
   caseVideoCard.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); abrirCase(); } });
-}
+});
 
 // ---- feedbacks: cada card espera um print em imagens/portfolio-fotos/ com o nome
 //      abaixo. Enquanto o arquivo não existir, aparece um quadro tracejado de
@@ -1764,7 +1794,8 @@ const TEXTOS = {
   caseKicker: { pt: "conteúdo que estourou", en: "content that blew up" },
   caseTitle: { pt: 'case de <span class="hl">sucesso</span>', en: '<span class="hl">success</span> case' },
   caseTag: { pt: "case de sucesso", en: "success case" },
-  caseMetric: { pt: "+600 mil visualizações", en: "+600k views" },
+  caseMetric: { pt: "+1M visualizações", en: "+1M views" },
+  caseMetric2: { pt: "+5M visualizações", en: "+5M views" },
   caseIntroTitulo: { pt: "conteúdo que gera alcance e conexão", en: "content that drives reach and connection" },
   caseIntroTexto: { pt: "Conteúdo pensado para prender a atenção, despertar interesse e conectar a marca com novos públicos.", en: "Content designed to grab attention, spark interest and connect the brand with new audiences." },
   casePlaceholder: { pt: "📊 cole aqui o print das métricas<br><small>imagens/portfolio-fotos/case-sucesso-metricas.png</small>", en: "📊 paste the metrics screenshot here<br><small>imagens/portfolio-fotos/case-sucesso-metricas.png</small>" },
