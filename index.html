@@ -652,6 +652,8 @@ section{ position:relative; padding:100px 0 90px; }
   background:var(--white); border:2px solid var(--black); border-radius:12px;
   padding:10px 22px; height:64px; min-width:110px; box-shadow:2px 2px 0 rgba(0,0,0,.25);
 }
+.brand-logo-chip--cheio{ padding:0; overflow:hidden; width:110px; }
+.brand-logo-chip--cheio .brand-logo-img{ width:100%; height:100%; max-width:none; max-height:none; object-fit:cover; }
 .brand-logo-img{ max-height:42px; max-width:190px; width:auto; height:auto; object-fit:contain; display:block; }
 .brand-logo-fallback{ font-family:var(--f-alt); font-size:1.25rem; color:var(--black); padding:0 4px; white-space:nowrap; }
 
@@ -1377,9 +1379,9 @@ const BRANDS = [
   { nome: "Coala Home", logo: "coala.jpg" },
   { nome: "SCRL", logo: "scrl.png" },
   { nome: "Freegells", logo: "freegells.jpg" },
-  { nome: "Dove", logo: "dove.jpg" },
-  { nome: "Popozuda", logo: "popozuda.jpg" },
-  { nome: "Go! Jelly", logo: "go-jelly.jpg" },
+  { nome: "Dove", logo: "dove.jpg", cheio: true },
+  { nome: "Popozuda", logo: "popozuda.jpg", cheio: true },
+  { nome: "Go! Jelly", logo: "go-jelly.jpg", cheio: true },
 ];
 
 // DADOS DOS VÍDEOS — categorias reais do portfólio rafamarzano.online.
@@ -1524,7 +1526,7 @@ function renderTickerTrack(){
   const build = () => BRANDS.map(b => b.logo
     ? `
     <span class="brand-ticker-item">
-      <span class="brand-logo-chip">
+      <span class="brand-logo-chip${b.cheio ? ' brand-logo-chip--cheio' : ''}">
         <img class="brand-logo-img" src="imagens/portfolio-fotos/${b.logo}" alt="${b.nome}"
           onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
         <span class="brand-logo-fallback" style="display:none;">${b.nome}</span>
