@@ -1,0 +1,115 @@
+/* Edição de Natal · tema Y2K rosa. Só vale quando o <html> tem a classe .natal */
+html.natal .natal-deco{ pointer-events:none; line-height:0; }
+html.natal .natal-deco svg{ display:block; width:100%; height:auto; }
+
+/* faixa de contagem regressiva */
+.natal-faixa{
+  display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:4px 14px;
+  padding:9px 14px 15px; text-decoration:none; color:var(--black);
+  background:
+    repeating-linear-gradient(-45deg,var(--pink-hot) 0 10px,var(--white) 10px 20px) bottom/100% 7px no-repeat,
+    var(--yellow);
+  border-bottom:2.5px solid var(--black);
+}
+.natal-faixa .nf-selo{
+  font-family:var(--f-label); letter-spacing:.1em; font-size:.9rem; line-height:1;
+  background:var(--pink-hot); color:var(--white); border:2px solid var(--black);
+  border-radius:999px; padding:5px 12px 3px; box-shadow:2px 2px 0 var(--black);
+}
+.natal-faixa .nf-contagem{ font-family:var(--f-label); font-weight:400; text-transform:uppercase; letter-spacing:.07em; font-size:1.15rem; }
+.natal-faixa .nf-detalhe{ font-family:var(--f-script); font-weight:700; font-size:1.2rem; line-height:1; }
+.natal-faixa .nf-cta{ font-family:var(--f-label); letter-spacing:.07em; text-transform:uppercase; font-size:1rem; text-decoration:underline; text-underline-offset:3px; }
+
+@keyframes nPisca{ 0%,100%{ filter:brightness(1) drop-shadow(0 0 0 rgba(255,224,102,0)); } 50%{ filter:brightness(1.18) drop-shadow(0 0 5px rgba(255,190,60,.9)); } }
+html.natal .n-luz{ animation:nPisca 1.8s ease-in-out infinite; }
+
+/* hero */
+html.natal .hero{ padding-top:84px; }
+html.natal .n-pisca{ position:absolute; top:-3px; left:0; right:0; z-index:6; overflow:hidden; }
+html.natal .n-pisca svg{ width:100%; height:70px; }
+html.natal .n-moldura{
+  position:absolute; inset:-9px; padding:9px; z-index:3; border:2.5px solid var(--black);
+  background:repeating-linear-gradient(45deg,var(--pink-hot) 0 11px,#fff 11px 22px);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+}
+html.natal .n-gorro{ position:absolute; width:44%; left:-17%; top:-13%; z-index:8; transform:rotate(-22deg); filter:drop-shadow(3px 3px 0 rgba(24,19,15,.35)); }
+html.natal .n-laco-hp2{ position:absolute; width:54%; left:-6%; bottom:-11%; transform:rotate(14deg); }
+html.natal .n-solto{ position:absolute; z-index:4; filter:drop-shadow(3px 3px 0 rgba(24,19,15,.18)); }
+html.natal .n-hero-mob{ display:none; }
+
+/* seções */
+html.natal .cat-row-title::before,
+html.natal .case-reach-title::before,
+html.natal .sec-kicker::before{
+  content:""; display:inline-block; width:1.9em; height:1.3em; margin-right:.35em; vertical-align:-.25em;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 28'%3E%3Cpath d='M20 14C14 4 3 1 2 8c-1 8 10 9 18 6Z' fill='%23ff2d87' stroke='%2318130f' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M20 14c6-10 17-13 18-6 1 8-10 9-18 6Z' fill='%23ff6fb0' stroke='%2318130f' stroke-width='2' stroke-linejoin='round'/%3E%3Crect x='16.5' y='9.5' width='7' height='9' rx='2.5' fill='%23ffe066' stroke='%2318130f' stroke-width='2'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+html.natal .n-laco-titulo{ width:62px; margin:0 auto 6px; transform:rotate(-4deg); }
+html.natal .n-neve-borda{
+  position:absolute; top:0; left:0; right:0; height:24px; z-index:3;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='24'%3E%3Cpath d='M0 0H160V7C150 7 148 18 138 18S128 8 116 8 106 22 94 22 84 9 72 9 62 15 52 15 42 7 30 7 22 20 13 20 6 7 0 7Z' fill='%23ffffff'/%3E%3Cpath d='M160 7C150 7 148 18 138 18S128 8 116 8 106 22 94 22 84 9 72 9 62 15 52 15 42 7 30 7 22 20 13 20 6 7 0 7' fill='none' stroke='%2318130f' stroke-width='1.8'/%3E%3C/svg%3E") repeat-x left top;
+}
+html.natal .n-diario-laco{ top:-30px; right:-20px; width:104px; transform:rotate(16deg); }
+html.natal .n-pendurada{ width:46px; display:flex; flex-direction:column; align-items:center; z-index:2; transform-origin:50% 0; animation:nBalanco 5s ease-in-out infinite; }
+html.natal .n-pendurada:nth-of-type(even){ animation-delay:-2.3s; }
+html.natal .n-pendurada i{ width:2.5px; background:var(--black); margin-bottom:-6px; }
+@keyframes nBalanco{ 0%,100%{ transform:rotate(-4deg); } 50%{ transform:rotate(4deg); } }
+
+html.natal .brand-ticker-wrap{
+  border-top:0; border-bottom:0; padding:9px 0;
+  background:
+    repeating-linear-gradient(-45deg,var(--black) 0 0, var(--white) 0 10px, var(--red) 10px 20px) top/100% 9px no-repeat,
+    repeating-linear-gradient(-45deg, var(--white) 0 10px, var(--red) 10px 20px) bottom/100% 9px no-repeat,
+    var(--pink-hot);
+}
+
+html.natal #services{ padding-top:44px; }
+html.natal .n-varal{ position:relative; height:150px; margin:0 0 34px; }
+html.natal .n-corda{ position:absolute; left:0; top:0; width:100%!important; height:46px!important; }
+html.natal .n-meia{ position:absolute; width:62px; transform:translateX(-50%) rotate(var(--g)); transform-origin:50% 0; filter:drop-shadow(3px 3px 0 rgba(24,19,15,.2)); }
+
+html.natal .n-arvore{ width:min(270px,70%); margin:22px auto 0; filter:drop-shadow(0 0 18px rgba(255,111,176,.45)); }
+
+@media (max-width:900px){
+  html.natal .n-diario-laco{ right:-10px; }
+  html.natal .n-pc{ display:none; }
+}
+@media (max-width:640px){
+  .natal-faixa .nf-detalhe{ display:none; }
+  .natal-faixa .nf-contagem{ font-size:1rem; }
+  .natal-faixa .nf-cta{ font-size:.9rem; }
+  html.natal .hero{ padding-top:92px; }
+  html.natal .n-hero-mob{ display:block; width:44px; }
+  html.natal .n-hero-mob.n-esq{ left:4%; bottom:26px; }
+  html.natal .n-hero-mob.n-dir{ right:5%; bottom:30px; width:32px; }
+  html.natal .n-gorro{ width:42%; left:-14%; }
+  html.natal .n-pendurada{ width:28px; opacity:.95; }
+  html.natal .n-pendurada i{ max-height:46px; }
+  html.natal .n-laco-titulo{ width:50px; }
+  html.natal .n-diario-laco{ width:76px; right:-8px; top:-24px; }
+  html.natal .n-meia{ width:52px; }
+}
+@media (prefers-reduced-motion: reduce){
+  html.natal .n-luz, html.natal .n-pendurada{ animation:none; }
+}
+
+/* fotos em carrossel xadrez */
+html.natal .natal-oculta{ display:none !important; }
+.natal-fotos{ display:flex; flex-direction:column; gap:16px; width:100%; }
+.nf-fileira{ overflow:hidden; padding:20px 0; line-height:0; background-color:#e0187a;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(24,19,15,.34) 0 5px, transparent 5px 10px),
+    repeating-linear-gradient(90deg, rgba(24,19,15,.34) 0 5px, transparent 5px 10px),
+    repeating-linear-gradient(90deg, transparent 0 22px, rgba(255,250,246,.45) 22px 23px, transparent 23px 30px),
+    repeating-linear-gradient(0deg, transparent 0 22px, rgba(255,250,246,.45) 22px 23px, transparent 23px 30px);
+  border-top:2.5px solid var(--black); border-bottom:2.5px solid var(--black); }
+.nf-trilho{ display:flex; width:max-content; animation:nCorrer linear infinite; will-change:transform; }
+.nf-volta .nf-trilho{ animation-direction:reverse; }
+.nf-trilho img{ width:var(--nf-w); aspect-ratio:4/5; height:auto; margin-right:var(--nf-vao); object-fit:cover; display:block; flex:none; }
+@keyframes nCorrer{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+@media (max-width:640px){ .natal-fotos{ gap:12px; } .nf-fileira{ padding:13px 0; } }
+@media (prefers-reduced-motion: reduce){
+  .nf-trilho{ animation:none; }
+  .nf-fileira{ overflow-x:auto; }
+}
